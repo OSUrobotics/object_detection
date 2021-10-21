@@ -1,0 +1,34 @@
+Base for Repo comes from https://github.com/tensorflow/models/tree/master/research/object_detection
+Datasets used: COCO Dataset, Kitti Dataset, Open Images Dataset, AVA v2.1 dataset, iNaturalist Species Detection Dataset
+
+--> COCO Dataset - Doesn't have a wet floor sign included
+Kitti Dataset - Only two classes ???
+OpenImages Dataset - Has a Traffic Sign instead?
+
+What they Copied from: https://github.com/tensorflow/models/blob/991f75e200721267302291862cd9bf936ca06f90/research/object_detection/colab_tutorials/object_detection_tutorial.ipynb
+Tensorflow 2 Detection Model Zoo: https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md
+
+Can't Find YOLO within code
+EDU_Pixel: 
+	https://github.com/MrKangs/URSA_2020
+		Copied from: https://github.com/khinthetnwektn/ObjectsDetectionTesting1
+	https://github.com/OSUrobotics/EDUPixel_Applications
+
+Uses:
+	tf.compat.v1: https://www.tensorflow.org/api_docs/python/tf/compat/v1
+	
+Export Inference Graph: export_inference_graph.py
+Need:
+	checkpoint
+	pipeline config
+Articles:
+	https://stackoverflow.com/questions/63524108/how-to-export-frozen-inference-graph-pb-from-a-checkpoint-in-tensorflow-objectde
+	--> https://towardsdatascience.com/custom-object-detection-using-tensorflow-from-scratch-e61da2e10087
+	
+Pre-Trained COCO with custom Dataset: https://github.com/fizyr/keras-retinanet/issues/452
+
+Keras Transfer Learning: https://towardsdatascience.com/transfer-learning-using-mobilenet-and-keras-c75daf7ff299
+
+More Stolen Resources: https://stackoverflow.com/questions/61161473/combine-tensorflow-object-detection-api-with-keras-model
+
+Freezing Keras Model: https://ksingh7.medium.com/part-iii-convert-keras-model-to-tensorflow-frozen-graph-model-a6aa6b1aaeee

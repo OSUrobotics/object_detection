@@ -1,0 +1,1 @@
+python model_main_tf2.py --pipeline_config_path=pipeline.config --model_dir=new_model/checkpoints --checkpoint_every_n=250 --num_workers=4 --alsologtostderr

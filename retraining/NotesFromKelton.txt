@@ -1,0 +1,76 @@
+Retraining Image Recognition - Annotated Notes form Kelton
+
+Additional guides for more information and help if I missed anything/ got something wrong
+https://neptune.ai/blog/how-to-train-your-own-object-detector-using-tensorflow-object-detection-api
+https://ersanpreet.wordpress.com/2018/08/19/training-custom-object-using-tensorflow-object-detection-api-on-cpu-part-5/#more-545
+https://3sidedcube.com/guide-retraining-object-detection-models-tensorflow/#API
+https://blog.roboflow.com/train-a-tensorflow2-object-detection-model/
+
+Find training images
+	For this step you just need to find as many pictures of what you want to identify as possible
+	There are some chrome extensions that make this easier like this one
+	Try to get around 60-100 images more images mean more accurate detections
+
+Label training images
+	Now the training images must be labeled based on what you are trying to recognize.
+	Using a program like Roboflow, RectLabel, or Labellmg you will draw a box around what you are recognizing and attach a label to that box
+		Roboflow: https://roboflow.com/
+	I highly recommend Roboflow because it makes the next step extremely easy.
+
+Create TFrecord using training images
+	If using Roboflow
+		Set the train/validate/test ratio to 50/0/50 
+		Leave all the settings as they are and click generate
+		Click export and choose Tensorflow TFRecord as the format
+	If using other labelmakers
+		Divide your labeled images and their XML files into two folders labelled test and train
+		Run the command python xml_to_csv.py -in pathtofolder/train -out train.csv for both folders replacing train with test
+		Run python generate_tfrecord.py --input_csv=train.csv  --output_tfrecord=train.record for both csvs replacing train with test
+
+Installations for training
+	Create a new folder named Tensorflow
+	Place the tfrecords you created in this folder
+	Download and extract the Tensorflow model garden into this folder
+	Download the protoc version for your computer and extract it to the folder as well
+	Ex: → protoc-3.18.0-win64.zip
+	Open a command prompt window and cd into the tensorflow folder
+	(Consider making a virtual environment using anaconda or venv that you will use when installing everything)
+	Run the command C:/tensorflow/protoc/bin/protoc.exe C:/tensorflow/models/research/object_detection/protos/*.proto --python_out=. 
+	This might error out depending on where you run the command from
+	Now run the commands pip install cython and pip install git+https://github.com/philferriere/cocoapi.git (you will need git installed for this one)
+		Alt: “git clone https://github.com/philferriere/cocoapi.git” from the tensorflow folder, cd into cocoapi/PythonAPI folder, “python setup.py build” then “python setup.py install”
+	Cd into the tensorflow directory and run the command copy object_detection/packages/tf2/setup.py .  and  python -m pip install .
+	Cd into the C:/Tensorflow/models/research and run the command  python object_detection/builders/model_builder_tf2_test.py
+	If everything installed correctly this should output some OKs
+
+Modifying label maps and config files
+	Currently the image recognition uses mscoco_label_map.pbtxt (in the data folder on the github) label map, ssd_mobilenet_v1_coco.config (in samples/configs), and the ssd_mobilenet_v1_coco_11_06_2017 model
+	Place the label map and config file in the tensorflow folder
+	Download and extract the ssd_mobilenet_v1_coco_11_06_2017 model in the tensorflow folder
+	Modifying the label map
+	When you add new labels you want recognized you will add them to the bottom of the mscoco_label_map.pbtxt in the format:
+		item {
+		  name: "newitem" (Just put the name of the new label for this)
+		  id: ## (Should be 1 above the previous highest)
+		  display_name: "newitem" (Whats shown when recognized)
+		}
+	Modifying the config file
+		In the config folder you will have to update the number of classes to match your new number of classes
+		You will also have to change 4 parts:
+			Modify num_classes, batch_size
+			At fine_tune_checkpoint: Replace "PATH_TO_BE_CONFIGURED/model.ckpt" with the path to the model.ckpt from the ssd_mobilenet_v1_coco_11_06_2017 folder
+			Refer to general file name, ex: “new_model_ckpt/ckpt-2”
+			At the train_input_reader: Replace "PATH_TO_BE_CONFIGURED/pet_faces_train.record-?????-of-00010" with the path to the train.tfrecord
+			At the tf_record_input_reader: Replace "PATH_TO_BE_CONFIGURED/pet_faces_train.record-?????-of-00010" with the path to the test.tfrecord
+			There will be 2 label_map_paths where you will replace "PATH_TO_BE_CONFIGURED/pet_label_map.pbtxt" with the path to the mscoco_label_map.pbtxt
+
+Model training
+	Copy the model_main_tf2.py from Tensorflow/models/research/object_detection to the base tensorflow folder
+	Cd to the tensorflow folder and run the command python model_main_tf2.py \
+	  --pipeline_config_path=<path to your config file> \ --model_dir=<path to a directory with your model> \ --checkpoint_every_n=<number of steps per checkpoint. Each step your computer processes a number of images equivalent to the batch size from the config file> \ --num_workers=<number of cpu cores that will be used for the job> \ --alsologtostderr
+	If can’t find object detection module
+		Windows: set PYTHONPATH=%PYTHONPATH%;%cd%\slim
+		Linux: export PYTHONPATH=$PYTHONPATH:pwd:pwd/slim
+
+After training
+	When training is done once you want to use the newly trained model make sure to modify the mainfile.py to reflect the new number of classes and the potentially new location of the model and label map

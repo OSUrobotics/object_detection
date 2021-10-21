@@ -1,0 +1,1 @@
+python exporter_main_v2.py --input_type image_tensor --pipeline_config_path=pipeline.config --trained_checkpoint_dir=new_model/checkpoints --output_directory=new_model/model
