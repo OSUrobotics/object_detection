@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 cap = cv2.VideoCapture(0)
 
+import os
 import sys
 sys.path.append("..")
 from utils import label_map_util
@@ -11,10 +12,10 @@ from utils import visualization_utils as viz_utils
 
 print("\nLoading Saved Model...")
 PATH_TO_MODEL = "new_model" # point to folder containing 'model' folder
-detect_fn = tf.saved_model.load(PATH_TO_MODEL + "/saved_model")
+detect_fn = tf.saved_model.load(os.path.join(PATH_TO_MODEL, "saved_model"))
 
 print("\nLoading Category Index...")
-category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_MODEL + "/mscoco_label_map.pbtxt", use_display_name=True)
+category_index = label_map_util.create_category_index_from_labelmap(os.path.join(PATH_TO_MODEL, "mscoco_label_map.pbtxt"), use_display_name=True)
 
 print("\nBegin Live Image Predicting")
 while True:
