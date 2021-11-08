@@ -40,7 +40,7 @@ while True:
         category_index,
         use_normalized_coordinates=True,
         max_boxes_to_draw=200,
-        min_score_thresh=0.85,
+        min_score_thresh=0.75,
         agnostic_mode=False)
 
     cv2.imshow('object detection', cv2.resize(image_np_with_detections, (800,600)))
