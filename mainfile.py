@@ -3,6 +3,12 @@ import numpy as np
 
 import cv2
 cap = cv2.VideoCapture(0)
+# print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+# print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+# cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640.0)
+# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480.0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960.0)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 960.0)
 
 import os
 import sys
@@ -42,7 +48,8 @@ while True:
         use_normalized_coordinates=True,
         max_boxes_to_draw=200,
         min_score_thresh=0.75,
-        agnostic_mode=False)
+        agnostic_mode=False,
+        line_thickness=6)
 
     cv2.imshow('object detection', cv2.resize(image_np_with_detections, (800,600)))
     if cv2.waitKey(25) == ord('q'):
