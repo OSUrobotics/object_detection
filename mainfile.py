@@ -3,6 +3,9 @@ import numpy as np
 
 import cv2
 cap = cv2.VideoCapture(0)
+if not(cap.isOpened()):
+    print("Can't find webcam, shutting down...")
+    quit()
 # print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 # print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640.0)
@@ -25,7 +28,7 @@ category_index = label_map_util.create_category_index_from_labelmap(os.path.join
 
 print("\nBegin Live Image Predicting")
 while True:
-    ret, image_np = cap.read()
+    ret, image_np = cap.read()    
     input_tensor = tf.convert_to_tensor(image_np)
     input_tensor = input_tensor[tf.newaxis, ...]
     if input_tensor == None:
@@ -47,7 +50,7 @@ while True:
         category_index,
         use_normalized_coordinates=True,
         max_boxes_to_draw=200,
-        min_score_thresh=0.75,
+        min_score_thresh=0.65,
         agnostic_mode=False,
         line_thickness=6)
 
