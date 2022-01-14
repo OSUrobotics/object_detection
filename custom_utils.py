@@ -1,3 +1,4 @@
+# import essential libraries
 import collections
 import numpy as np
 import PIL.Image as Image
@@ -5,8 +6,10 @@ import PIL.ImageDraw as ImageDraw
 import PIL.ImageFont as ImageFont
 import six
 
+# import tf utilities
 from utils import visualization_utils as viz_utils
 
+# set of standarad colors to choose from randomly (DEPRECATED)
 STANDARD_COLORS = [
     'AliceBlue', 'Chartreuse', 'Aqua', 'Aquamarine', 'Azure', 'Beige', 'Bisque',
     'BlanchedAlmond', 'BlueViolet', 'BurlyWood', 'CadetBlue', 'AntiqueWhite',
@@ -33,7 +36,7 @@ STANDARD_COLORS = [
     'WhiteSmoke', 'Yellow', 'YellowGreen'
 ]
 
-# Subset of STANDARD_COLORS ordered/hardcoded to match the laebl map for the new model. The name and value of these
+# subset of STANDARD_COLORS ordered/hardcoded to match the laebl map for the new model. The name and value of these
 # colors don't match however; e.g. 'Aqua' for the Wet Floor Sign shows up as yellow
 CUSTOM_COLORS = [
     'Lavender', 'YellowGreen', 'Orchid', 'Snow', 'White', 'Wheat', 'Azure', 'CadetBlue',
@@ -41,31 +44,7 @@ CUSTOM_COLORS = [
 ]
 
 
-def _get_multiplier_for_color_randomness():
-  """Returns a multiplier to get semi-random colors from successive indices.
-  This function computes a prime number, p, in the range [2, 17] that:
-  - is closest to len(STANDARD_COLORS) / 10
-  - does not divide len(STANDARD_COLORS)
-  If no prime numbers in that range satisfy the constraints, p is returned as 1.
-  Once p is established, it can be used as a multiplier to select
-  non-consecutive colors from STANDARD_COLORS:
-  colors = [(p * i) % len(STANDARD_COLORS) for i in range(20)]
-  """
-  num_colors = len(STANDARD_COLORS)
-  prime_candidates = [5, 7, 11, 13, 17]
-
-  # Remove all prime candidates that divide the number of colors.
-  prime_candidates = [p for p in prime_candidates if num_colors % p]
-  if not prime_candidates:
-    return 1
-
-  # Return the closest prime number to num_colors / 10.
-  abs_distance = [np.abs(num_colors / 10. - p) for p in prime_candidates]
-  num_candidates = len(abs_distance)
-  inds = [i for _, i in sorted(zip(abs_distance, range(num_candidates)))]
-  return prime_candidates[inds[0]]
-
-
+# these next few functions are copied from 'visualization_utils.py' with minor modifications
 def draw_bounding_box_on_image_array(image,
                                      ymin,
                                      xmin,
@@ -142,7 +121,7 @@ def draw_bounding_box_on_image(image,
               width=thickness,
               fill=color)
   try:
-    font = ImageFont.truetype('arial.ttf', 32) # Font Size: 24 -> 32
+    font = ImageFont.truetype('arial.ttf', 32) # EDIT: Font Size: 24 -> 32
   except IOError:
     font = ImageFont.load_default()
 
@@ -295,10 +274,10 @@ def visualize_boxes_and_labels_on_image_array(
         if agnostic_mode:
           box_to_color_map[box] = 'DarkOrange'
         elif track_ids is not None:
-          prime_multipler = _get_multiplier_for_color_randomness()
+          prime_multipler = viz_utils._get_multiplier_for_color_randomness()
           box_to_color_map[box] = STANDARD_COLORS[
               (prime_multipler * track_ids[i]) % len(STANDARD_COLORS)]
-        else:
+        else: # EDIT: change selection from STANDARD_COLORS to CUSTOM_COLORS and modify index used for selection
           box_to_color_map[box] = CUSTOM_COLORS[
               (classes[i] - 91) % len(CUSTOM_COLORS)]
 
