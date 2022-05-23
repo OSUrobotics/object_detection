@@ -1,6 +1,5 @@
-# import essential libraries
+# import tensorflow libraries
 import tensorflow as tf
-import numpy as np
 
 # import opencv and find webcam
 import cv2
@@ -10,10 +9,6 @@ if not(cap.isOpened()):
     quit()
 
 # set resolution of camera capture
-#print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-#print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-#cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640.0)
-#cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480.0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960.0)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 960.0)
 
@@ -69,6 +64,7 @@ while True:
 
     # display captured image with detection boxes
     cv2.imshow('object detection', cv2.resize(image_np, (800,600)))
+	
     # exit program when 'q' key is pressed
     if cv2.waitKey(25) == ord('q'):
         cv2.destroyAllWindows()
