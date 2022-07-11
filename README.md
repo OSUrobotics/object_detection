@@ -2,6 +2,9 @@ Necessary Installations and versions
 Python 3.7
 Tensorflow 2.1.0
 Opencv-Python
+Protobuf 3.20.*
+Pillow
+MatPlotLib
 Version matters for TensorFlow and python but not OpenCV
 
 To Run:

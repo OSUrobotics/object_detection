@@ -1,5 +1,6 @@
 # import tensorflow libraries
 import tensorflow as tf
+import numpy as np
 
 # import opencv and find webcam
 import cv2
